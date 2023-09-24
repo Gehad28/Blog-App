@@ -1,0 +1,34 @@
+<div class="container row vertical-center">
+    <form [formGroup]="registerForm" (ngSubmit)="submitForm()" class="form">
+        <div class="text-center">
+            <h1>Sign up</h1>
+            <span *ngIf="message" class="form-text text-danger">{{message}}</span>
+            <br>
+            <br>
+        </div>
+        <div class="form-floating ">
+            <input formControlName="name" type="email" class="form-control" placeholder="name">
+            <label for="floatingInput">Name</label>
+            <span *ngIf="getError('name', 'required')" class="form-text mx-2 text-danger">This field is required.</span>
+            <br>
+        </div>
+        <div class="form-floating">
+            <input formControlName="email" type="email" class="form-control" placeholder="name@example.com">
+            <label for="floatingInput">Email address</label>
+            <span *ngIf="getError('email', 'required')" class="form-text mx-2 text-danger">This field is required.</span>
+            <br>
+        </div>
+        <div class="form-floating">
+            <input formControlName="password" type="password" class="form-control" placeholder="Password">
+            <label for="floatingPassword">Password</label>
+            <span *ngIf="getError('password', 'required')" class="form-text mx-2 text-danger">This field is required.</span>
+            <span *ngIf="getError('password', 'minlength')" class="form-text mx-2 text-danger">Password must be 8 characters at least.</span>
+            <br>
+            <br>
+        </div>
+        <div class="text-center">
+            <button type="submit" mat-fab extended color="primary" class="button mb-3">Sign up</button>
+            <p>Have an account? <a [routerLink]="['/login']">Sign in</a></p>
+        </div>
+    </form>
+</div>

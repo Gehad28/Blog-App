@@ -1,0 +1,26 @@
+@import "../../vars.scss";
+
+.header{
+    background-color: $primary;
+}
+
+a{
+    color: white;
+}
+
+.logo{
+    font-size: 30px;
+    color: white;
+}
+
+.button{
+    color: $primary !important;
+}
+
+.icon{
+    color: white;
+}
+
+h1{
+    cursor: pointer;
+}

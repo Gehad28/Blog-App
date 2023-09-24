@@ -1,0 +1,21 @@
+@import "../../vars.scss";
+
+.vertical-center {
+    min-height: 90vh;
+    max-width: 50%;
+    margin: auto;
+}
+
+.button{
+    width: 150px;
+}
+
+.form{
+    width: 400px;
+    margin: auto;
+}
+
+a{
+    text-decoration: none;
+    color: $primary;
+}
