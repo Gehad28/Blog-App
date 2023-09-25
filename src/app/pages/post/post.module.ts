@@ -16,11 +16,13 @@ import { UserModule } from '../user/user.module';
 import { UserRoutingModule } from '../user/user-routing.module';
 import {MatDialogModule} from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CommentComponent } from './comment/comment.component';
 
 @NgModule({
   declarations: [
     PostComponent,
-    AddPostComponent
+    AddPostComponent,
+    CommentComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,24 @@
+<div class="comments">
+    <div *ngFor="let comment of comments" class="col-md-6 col-sm-8 comments mt-3 mb-3">
+        <a [routerLink]="['/profile', comment.user.id]" class="link-dark friend-card">
+            <mat-card>
+                <mat-card-content class="d-flex flex-sm-row flex-column">
+                    <img [routerLink]="['/profile', userId]" [src]="comment.user.pic" class="friend-img">
+                    <div class="d-flex flex-column">
+                        <h6 [routerLink]="['/profile', userId]" class="mt-auto mb-auto mx-2">{{comment.user.name}}</h6>
+                        <p class="mt-auto mb-auto mx-2">{{comment.content}}</p>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </a>
+    </div>
+
+    <div class="container">
+        <form [formGroup]="addCommentForm" (ngSubmit)="onSubmit()" class="form mt-3">
+            <div class="input-group mb-3">
+                <input formControlName="comment" type="email" class="form-control" id="floatingInput" placeholder="Add comment..">
+                <button mat-button type="submit"><mat-icon>send</mat-icon></button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -11,14 +11,18 @@
       </p>
     </mat-card-content>
     <mat-card-actions class="d-flex justify-content-around">
-      <button mat-button [matMenuTriggerFor]="menu"><mat-icon>thumb_up</mat-icon>Like</button>
+      <button mat-button #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu" (click)="showMenu(menuTrigger)"
+              [ngClass]="{'reacted-like': isReact && reactType.icon == 'thumb_up', 'reacted-love': isReact && reactType.icon == 'favorite' ,'no-react': !isReact}">
+        <mat-icon>{{reactType.icon}}</mat-icon>{{reactType.name}}
+      </button>
       <mat-menu #menu="matMenu">
         <div class="menu">
-            <button mat-menu-item class="item"><mat-icon>thumb_up</mat-icon></button>
-            <button mat-menu-item class="item"><mat-icon>favorite</mat-icon></button>
+            <button mat-menu-item (click)="onReact('1')" class="item"><mat-icon>thumb_up</mat-icon></button>
+            <button mat-menu-item (click)="onReact('2')" class="item"><mat-icon>favorite</mat-icon></button>
         </div>
       </mat-menu>
-      <button mat-button><mat-icon> comment</mat-icon>Comment</button>
+      <!-- <mat-menu #placeholder="matMenu" class="placeholder"></mat-menu> -->
+      <button mat-button (click)="openDialog()"><mat-icon> comment</mat-icon>Comment</button>
       <button mat-button><mat-icon>share</mat-icon> Share</button>
     </mat-card-actions>
 </mat-card>

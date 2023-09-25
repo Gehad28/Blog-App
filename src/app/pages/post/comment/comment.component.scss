@@ -1,0 +1,33 @@
+
+
+.container{
+    margin: auto;
+    width: 100%;
+    height: auto;
+}
+
+.form{
+    width: 90%;
+    margin: auto;
+}
+
+.comments{
+    width: 90%;
+    margin: auto;
+}
+
+
+.friend-img{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.friend-card{
+    text-decoration: none;
+}
+
+
+.friend-card h6:hover, img:hover{
+    opacity: 0.8;
+}
