@@ -1,0 +1,109 @@
+<mat-sidenav-container class="example-container" (backdropClick)="sidenav.toggle()">
+    <mat-sidenav #sidenav class="example-sidenav" (keydown.escape)="sidenav.toggle()" disableClose [opened]="true" mode="side">
+        <div class="profilepic">
+            <img [src]="user.pic" [ngClass]="{'m-3': true, 'profile-img': isCuurentUser}">
+            <div *ngIf="isCuurentUser" class="profilepic__content">
+                <label for="formFile" class="profilepic__text d-flex flex-column">
+                    <span class="profilepic__icon"><i class="fas fa-camera"></i></span>
+                    Change Photo
+                </label>
+                <input class="form-control" type="file" requiredFileType="image/png, image/jpg, image/jpeg" id="formFile" (change)="onChange($event)" hidden>
+            </div>
+        </div>
+        <form *ngIf="editForm" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()" class="m-2">
+            <div class="mb-3">
+                <input type="text" class="form-control" formControlName="name" placeholder="Name">
+            </div>
+            <div class="mb-3">
+                <textarea type="text" rows="2" class="form-control" formControlName="bio" placeholder="Bio"></textarea>
+            </div>
+            <div class="mb-3">
+                <input type="tel" class="form-control" formControlName="phone" placeholder="Phone Number"/>
+              </div>
+            <div class="mb-3">
+                <input type="email" class="form-control" formControlName="email" placeholder="Email Address"/>
+              </div>
+            <!-- <div class="mb-3">
+                <input type="password" class="form-control" formControlName="password" placeholder="Password" />
+              </div> -->
+            <div class="mb-3">
+                <input type="text" class="form-control" formControlName="facebookUsername" placeholder="Facebook Username">
+            </div>
+            <button type="submit" mat-raised-button color="primary" class="mt-2">Submit</button>
+            <button type="button" mat-raised-button class="mt-2 mx-2" (click)="onCancle()">Cancle</button>
+        </form>
+
+        <h3  class="fw-medium" *ngIf="!editForm">{{user.name}}</h3 >
+            
+        <mat-divider *ngIf="!editForm" class="divider"></mat-divider>
+        <div class="info m-3" *ngIf="!editForm">
+            <p *ngIf="user.bio" class="about">{{user.bio}}</p>
+            <button mat-raised-button color="primary" *ngIf="isCuurentUser" (click)="editProfile()">Edit Profile</button>
+            <button mat-raised-button color="primary" *ngIf="!isCuurentUser && !isFriend" (click)="addFriend()">Add Friend</button>
+            <button mat-raised-button color="primary" *ngIf="!isCuurentUser &&  isFriend" (click)="deleteFriend()">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="check"></mat-icon>Friend
+            </button>
+            <mat-card class="mt-3 mb-3">
+                <mat-card-content>
+                    <div *ngIf="user.phone" class="d-flex">
+                        <mat-icon aria-hidden="false" aria-label="Example phone icon" fontIcon="phone"></mat-icon>
+                        <p class="mx-1">{{user.phone}}</p>
+                    </div>
+                    <div class="d-flex">
+                        <mat-icon aria-hidden="false" aria-label="Example email icon" fontIcon="email"></mat-icon>
+                        <a href="{{'mailto:' + user.email}}" target="_blank" class="link-dark">
+                            <p class="mx-1">{{user.email}}</p>
+                        </a>
+                    </div>
+                    <div *ngIf="user.facebookUsername" class="d-flex">
+                        <mat-icon aria-hidden="false" aria-label="Example facebook icon" fontIcon="facebook"></mat-icon>
+                        <a href="{{'https://www.facebook.com/' + user.facebookUsername + '/'}}" target="_blank" class="link-dark">
+                            <p class="mx-1">{{user.facebookUsername}}</p>
+                        </a>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <button mat-icon-button [ngClass]="{'button':true,'open':opened}" (click)="sidenav.toggle()" class="example-icon toggle-button" aria-label="Example icon button with a menu icon">
+            <mat-icon color="primary">menu</mat-icon>
+        </button>
+        <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" class="mt-2 mx-2" dynamicHeight>
+            <mat-tab label="Posts">
+                <div class="container-sm border rounded m-2 mx-0">
+                    <div class="d-flex flex-sm-row flex-column justify-content-end mt-2">
+                        <!-- <div class="mt-3 mx-2" *ngIf="isCuurentUser">
+                            <button mat-raised-button color="primary"  (click)="openDialog()">Add Post</button>
+                        </div> -->
+                        <!-- <app-search-form></app-search-form> -->
+                    </div>
+                    <div class="container row vertical-center">
+                        <button mat-stroked-button (click)="openDialog()" class="post-button">What's on your mind?</button>
+                    </div>
+                    <div *ngFor="let post of posts">
+                        <app-post [post]="post"></app-post>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Friends">
+                <div  class="container-sm border rounded m-2 mx-0">
+                    <div class="row text-left d-flex justify-content-start m-3">
+                        <div *ngFor="let friend of friendsList" class="col-md-6 col-sm-8">
+                            <a [routerLink]="['/profile', friend.id]" class="link-dark friend-card m-1">
+                                <mat-card>
+                                    <mat-card-content class="d-flex flex-sm-row flex-column">
+                                        <img [src]="friend.pic" class="friend-img">
+                                        <p class="mt-auto mb-auto mx-2">{{friend.name}}</p>
+                                    </mat-card-content>
+                                </mat-card>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+

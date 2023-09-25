@@ -12,7 +12,12 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent, title: 'Sign up'},
 
   {path: '', redirectTo: 'home', pathMatch: 'full'},
-  {path: 'home', component: HomeComponent, title: 'Sign up'}
+  {path: 'home', component: HomeComponent, title: 'Sign up'},
+
+  {
+    path: '', 
+    loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule), 
+  },
 ];
 
 @NgModule({

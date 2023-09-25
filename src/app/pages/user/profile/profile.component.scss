@@ -1,0 +1,140 @@
+.example-container {
+    height: auto;
+    min-height: 100%;
+}
+
+
+.example-sidenav {
+    width: auto;
+    min-width: 20%;
+    max-width: 60%;
+    text-align: center;
+    background-color: #f8f9fa;
+}
+
+.profilepic{
+    position: relative;
+    overflow: hidden;
+}
+
+.profilepic__content:hover {
+    opacity: 1;
+}
+
+.profilepic:hover .profile-img {
+    opacity: .8;
+}
+
+.example-sidenav img{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%; 
+    object-fit: cover;
+    opacity: 1;
+    transition: opacity .2s ease-in-out;
+}
+
+.profilepic__content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    opacity: 0;
+    transition: opacity .2s ease-in-out;
+}
+
+.profilepic__icon {
+    color: white;
+    padding-bottom: 8px;
+    cursor: pointer;
+}
+
+.fas {
+    font-size: 20px;
+}
+  
+.profilepic__text {
+    text-transform: uppercase;
+    font-size: 12px;
+    width: 50%;
+    text-align: center;
+    cursor: pointer;
+}
+
+.divider{
+    visibility: hidden;
+}
+
+.button{
+    z-index: 3;
+    transform: translate3d(0,0,0);
+    /* transition:0.4s cubic-bezier(0.25, 0.8, 0.25, 1); */
+}
+  
+.open{
+    transition:0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+
+.info{
+    display: inline-block;
+    text-align: left;
+}
+
+
+.info a{
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.info a p:hover{
+    color: #3f51b5;
+}
+
+.primary-color{
+    color: #3f51b5;    
+}
+  
+.change-photo{
+    cursor: pointer;
+}
+
+
+
+.friend-img{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.friend-card{
+    text-decoration: none;
+}
+
+.friend-card:hover{
+    opacity: 0.8;
+}
+
+.friend-card h3:hover{
+    color: #3f51b5;
+}
+
+
+.vertical-center {
+    max-width: 620px;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.post-button{
+    width: 600px;
+    margin: auto;
+    color: gray;
+    justify-content: flex-start;
+}

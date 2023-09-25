@@ -1,0 +1,30 @@
+<div class="container">
+    <form [formGroup]="addPostForm" class="container mt-5" (ngSubmit)="onSubmit()">
+        <div class="d-flex align-items-center justify-content-between">
+            <select class="form-select w-50" aria-label="Default select example">
+                <option selected>Privacy</option>
+                <option value="1">Public</option>
+                <option value="2">Friends</option>
+                <option value="3">Only Me</option>
+            </select>
+            <div class="mx-5">
+                <label for="formFile" class="d-flex align-items-center input">
+                    <mat-icon class="image">image</mat-icon>
+                    <span>Add Photo</span>
+                </label>
+                <input (change)="onChange($event)" class="form-control" type="file" requiredFileType="image/png, image/jpg, image/jpeg" id="formFile" hidden>
+            </div>
+        </div>
+        <div>
+            <textarea formControlName="content" class="form-control mt-3" rows="5" placeholder="What's on your mind?" id="exampleFormControlTextarea1"></textarea>
+        </div>
+        
+        <div class="d-flex justify-content-between mt-3">
+            <button mat-raised-button color="primary" type="submit" class="button left">Create</button>
+            <button mat-raised-button (click)="onCancle()" type="button" class="button">Cancle</button>
+        </div>
+
+    </form>
+</div>
+
+

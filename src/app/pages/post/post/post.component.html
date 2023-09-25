@@ -1,0 +1,25 @@
+<mat-card class="example-card">
+    <mat-card-header>
+      <img mat-card-avatar [routerLink]="['/profile', user.id]" class="example-header-image user" [src]="user.pic">
+      <mat-card-title><a class="user" [routerLink]="['/profile', user.id]">{{user.name}}</a></mat-card-title>
+      <mat-card-subtitle class="d-flex align-items-center">{{post.createAt}} <mat-icon class="privacy mx-2">{{post.privacy}}</mat-icon></mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image *ngIf="post.image" [src]="post.image" alt="Photo of a Shiba Inu">
+    <mat-card-content>
+      <p>
+        {{post.content}}
+      </p>
+    </mat-card-content>
+    <mat-card-actions class="d-flex justify-content-around">
+      <button mat-button [matMenuTriggerFor]="menu"><mat-icon>thumb_up</mat-icon>Like</button>
+      <mat-menu #menu="matMenu">
+        <div class="menu">
+            <button mat-menu-item class="item"><mat-icon>thumb_up</mat-icon></button>
+            <button mat-menu-item class="item"><mat-icon>favorite</mat-icon></button>
+        </div>
+      </mat-menu>
+      <button mat-button><mat-icon> comment</mat-icon>Comment</button>
+      <button mat-button><mat-icon>share</mat-icon> Share</button>
+    </mat-card-actions>
+</mat-card>
+  

@@ -10,7 +10,7 @@
             <button mat-icon-button routerLink="/home" class="example-icon icon" aria-label="Example icon-button with home icon">
                 <mat-icon class="example-icon icon" aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
             </button>
-            <button mat-icon-button  class="example-icon icon" aria-label="Example icon-button with share icon">
+            <button mat-icon-button *ngIf="isUser" [routerLink]="['/profile', userId]"  class="example-icon icon" aria-label="Example icon-button with share icon">
                 <mat-icon>person</mat-icon>
             </button>
          </li>
@@ -21,12 +21,12 @@
      </div>
     </div>
      <div class="d-flex align-item-center">
-         <button mat-raised-button class="m-2 button"  routerLink="/login">Login</button>
-         <button mat-raised-button class="m-2 button"  routerLink="/register">Register</button>
+         <button mat-raised-button class="m-2 button" *ngIf="!isUser" routerLink="/login">Sign in</button>
+         <button mat-raised-button class="m-2 button" *ngIf="!isUser" routerLink="/register">Sign up</button>
          <!-- <button mat-icon-button  class="example-icon icon" aria-label="Example icon-button with share icon">
            <mat-icon>person</mat-icon>
          </button> -->
-         <button mat-raised-button class="m-2 button" >Sign Out</button>
+         <button mat-raised-button class="m-2 button" *ngIf="isUser" (click)="signOut()" >Sign Out</button>
      </div>
    </nav>
    
