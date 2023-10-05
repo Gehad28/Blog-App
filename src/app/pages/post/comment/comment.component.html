@@ -1,24 +1,38 @@
-<div class="comments">
-    <div *ngFor="let comment of comments" class="col-md-6 col-sm-8 comments mt-3 mb-3">
-        <a [routerLink]="['/profile', comment.user.id]" class="link-dark friend-card">
-            <mat-card>
-                <mat-card-content class="d-flex flex-sm-row flex-column">
-                    <img [routerLink]="['/profile', userId]" [src]="comment.user.pic" class="friend-img">
-                    <div class="d-flex flex-column">
-                        <h6 [routerLink]="['/profile', userId]" class="mt-auto mb-auto mx-2">{{comment.user.name}}</h6>
-                        <p class="mt-auto mb-auto mx-2">{{comment.content}}</p>
+<a class="link-dark friend-card">
+    <div class="border rounded p-2">
+        <div *ngIf="comment" class="d-flex justify-content-between">
+            <div class="d-flex">
+                <img [routerLink]="['/profile', comment.user.id]" [src]="comment.user.pic" class="friend-img">
+                <div class="d-flex flex-column">
+                    <h6 [routerLink]="['/profile', comment.user.id]" class="mt-auto mb-auto mx-2">{{comment.user.name}}</h6>
+                    <p *ngIf="!editFlag" class="mt-auto mb-auto mx-2">{{comment.content}}</p>
+                    <div *ngIf="editFlag" class="container">
+                        <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="form mt-3">
+                            <div class="input-group mb-3">
+                                <input formControlName="comment" type="text" class="form-control" id="floatingInput" placeholder="Add comment..">
+                                <button mat-button type="submit"><mat-icon>send</mat-icon></button>
+                            </div>
+                        </form>
                     </div>
-                </mat-card-content>
-            </mat-card>
-        </a>
-    </div>
-
-    <div class="container">
-        <form [formGroup]="addCommentForm" (ngSubmit)="onSubmit()" class="form mt-3">
-            <div class="input-group mb-3">
-                <input formControlName="comment" type="email" class="form-control" id="floatingInput" placeholder="Add comment..">
-                <button mat-button type="submit"><mat-icon>send</mat-icon></button>
+                </div>
             </div>
-        </form>
+            <div class="text-end">
+                <button *ngIf="comment.user.id == userId" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                    <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="editComment()">
+                        <mat-icon class="icon">edit</mat-icon>
+                        <span>Edit comment</span>
+                    </button>
+                    <button mat-menu-item (click)="deleteComment()">
+                        <mat-icon class="icon">delete</mat-icon>
+                        <span>Delete comment</span>
+                    </button>
+                    </mat-menu>
+            </div>
+        </div>
     </div>
-</div>
+</a>
+
+

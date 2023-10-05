@@ -7,5 +7,6 @@ export interface React{
     user: User,
     userId: string | null,
     post: Post,
-    postId: string
+    postId: string,
+    isReact: string
 }

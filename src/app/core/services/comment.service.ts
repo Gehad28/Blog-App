@@ -19,4 +19,12 @@ export class CommentService {
   getAllComments(id: string): Observable<any> {
     return this._http.get(`${baseUrl}/all-comment/${id}`);
   }
+
+  editComment(commentId: string, comment: Comment): Observable<any> {
+    return this._http.put(`${baseUrl}/update/${commentId}`, comment);
+  }
+
+  deleteComment(commentId: string, userId: any): Observable<any> {
+    return this._http.delete(`${baseUrl}/delete-comment/${commentId}/${userId}`);
+  }
 }

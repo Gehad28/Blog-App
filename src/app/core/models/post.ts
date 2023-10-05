@@ -8,5 +8,8 @@ export interface Post{
     createAt: string,
     user: User,
     sharedPost: Post | null,
-    privacy: string
+    privacy: string,
+    numberOfReacts: string,
+    numberOfComments: string,
+    isReact: boolean
 }

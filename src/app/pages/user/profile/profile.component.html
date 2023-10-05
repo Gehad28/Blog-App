@@ -79,9 +79,10 @@
                         </div> -->
                         <!-- <app-search-form></app-search-form> -->
                     </div>
-                    <div class="container row vertical-center">
+                    <div class="container row vertical-center mb-2">
                         <button mat-stroked-button (click)="openDialog()" class="post-button">What's on your mind?</button>
                     </div>
+                    <p *ngIf="posts.length == 0" class="text-center mt-3">No posts yet.</p>
                     <div *ngFor="let post of posts">
                         <app-post [post]="post"></app-post>
                     </div>

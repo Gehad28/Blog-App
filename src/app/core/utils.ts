@@ -8,7 +8,7 @@ export class Utils{
 
     constructor(private _sanitizer: DomSanitizer){}
 
-    public ConvertImage(image: string){
+    public ConvertImage(image: any){
         return this._sanitizer.bypassSecurityTrustResourceUrl(image) as string;
     }
 

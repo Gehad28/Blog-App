@@ -1,0 +1,16 @@
+<h5 class="m-2 mx-5">Comments</h5>
+<div class="comments">
+    <p *ngIf="comments.length == 0" class="text-center mt-3">No comments yet.</p>
+    <div *ngFor="let comment of comments" class="col-md-6 col-sm-8 comments mt-3 mb-3">
+        <app-comment [comment]="comment" (obs)="update($event)"></app-comment>
+    </div>
+
+    <div class="container">
+        <form [formGroup]="addCommentForm" (ngSubmit)="onSubmit()" class="form mt-3">
+            <div class="input-group mb-3">
+                <input formControlName="comment" type="text" class="form-control" id="floatingInput" placeholder="Add comment..">
+                <button mat-button type="submit"><mat-icon>send</mat-icon></button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -22,4 +22,18 @@ export class PostService {
   getProfilePosts(userId: string, id: string): Observable<any>{
     return this._http.get(`${baseUrl}/posts/${id}/${userId}`);
   }
+
+  sharePost(postId: string, userId: any, post: any): Observable<any>{
+    return this._http.post(`${baseUrl}/share-post/${postId}/${userId}`, post);
+  }
+
+  editPost(postId: string, userId: any, post: any): Observable<any> {
+    return this._http.put(`${baseUrl}/update/${postId}/${userId}`, post);
+  }
+
+  deletePost(postId: string): Observable<any> {
+    return this._http.delete(`${baseUrl}/delete-post`, {params: {
+      "post-id": postId
+    }});
+  }
 }

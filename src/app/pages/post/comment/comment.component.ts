@@ -1,7 +1,7 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Post } from 'src/app/core/models/post';
 import { CommentService } from 'src/app/core/services/comment.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -14,67 +14,47 @@ import { User } from 'src/app/core/models/user';
   styleUrls: ['./comment.component.scss']
 })
 export class CommentComponent implements OnInit, OnDestroy {
-  comments: Comment[] = [];
-  addCommentForm!:FormGroup;
-  subs: Subscription[] = [];
-  post!: Post;
+  @Input() comment!: Comment;
+  @Output() obs = new EventEmitter<any>();
   userId!: string;
-  user: User = {
-    id: null,
-    name: null,
-    email: null,
-    password: null,
-    pic: null,
-    bio: null,
-    facebookUsername: null,
-    phone: null
-  };
+  editForm!: FormGroup;
+  subs: Subscription[] = [];
+  editFlag = false;
 
-  constructor(private _fb: FormBuilder, 
-              private dialogRef: MatDialogRef<CommentComponent>,
-              @Inject(MAT_DIALOG_DATA) data: Post,
-              private _commentService: CommentService,
-              private _userService: UserService) {
-    this.addCommentForm = _fb.group({
-      comment: null
+  constructor(private _commentService: CommentService,
+              private _userService: UserService,
+              private _fb: FormBuilder) {}
+
+
+  editComment(){
+    this.editFlag = true;
+    this.editForm = this._fb.group({
+      comment: this.comment.content
     });
-
-    this.post = data;
   }
 
-  getComments(){
-    const sub = this._commentService.getAllComments(this.post.id).subscribe({
-      next: response => {
-        console.log(response);
-        this.comments = response['data'].reverse();
+  onSubmit(){
+    const data = this.editForm.value;
+    const sub = this._commentService.editComment(this.comment.commentId, data).subscribe({
+      next: res => {
+        this.editFlag = false;
+        this.comment.content = res.content;
       }
     });
     this.subs.push(sub);
   }
 
-  onSubmit(){
-    const comment: Comment = {
-      commentId: '',
-      content: this.addCommentForm.controls['comment'].value,
-      user: this.user,
-      post: this.post,
-      userId: this.userId,
-      postId: this.post.id
-    }
-    const sub = this._commentService.addComment(this.post.id, comment).subscribe({
-      next: response => this.getComments()
+  deleteComment(){
+    const sub = this._commentService.deleteComment(this.comment.commentId, this.userId).subscribe({
+      next: res => {
+        this.obs.emit(res);
+      }
     });
     this.subs.push(sub);
   }
 
   ngOnInit(): void {
     this.userId = this._userService.getUserId();
-    const subUser = this._userService.getUser(this.userId).subscribe({
-      next: user => this.user = user
-    });
-    this.subs.push(subUser);
-
-    this.getComments();
   }
 
   ngOnDestroy(): void {
@@ -83,6 +63,5 @@ export class CommentComponent implements OnInit, OnDestroy {
         sub.unsubscribe();
       }
     });
-    this.dialogRef.close();
   }
 }

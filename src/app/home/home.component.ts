@@ -9,19 +9,29 @@ import { AddPostComponent } from '../pages/post/add-post/add-post.component';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-
   subs: Subscription[] = [];
   id!: string;
   posts: Post[] = [];
 
-  constructor(private _postService: PostService,
-              private _userService: UserService,
-              private matDialog: MatDialog) {}
+  constructor(
+    private _postService: PostService,
+    private _userService: UserService,
+    private matDialog: MatDialog
+  ) {}
 
-  openDialog(){
+  getPosts(){
+    const sub = this._postService.getAllPosts(this.id).subscribe({
+      next: (respons) => {
+        this.posts = respons['data'].reverse();
+      },
+    });
+    this.subs.push(sub);
+  }
+
+  openDialog() {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.autoFocus = true;
@@ -29,26 +39,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     dialogConfig.height = '50%';
     this.matDialog.open(AddPostComponent, dialogConfig);
     this.matDialog.afterAllClosed.subscribe({
-      next: () => {
-        const sub = this._postService.getAllPosts(this.id).subscribe({
-          next: respons => {
-            this.posts = respons['data'].reverse();
-          }
-        });
-        this.subs.push(sub);
-      }
-    })
+      next: () => this.getPosts()
+    });
   }
 
   ngOnInit(): void {
     this.id = this._userService.getUserId();
-    const sub = this._postService.getAllPosts(this.id).subscribe({
-      next: respons => this.posts = respons['data'].reverse()
-    });
-    this.subs.push(sub);
+    this.getPosts();
   }
 
   ngOnDestroy(): void {
-    this.subs.forEach(sub => sub.unsubscribe());
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }

@@ -15,4 +15,8 @@ export class ReactService {
   addReact(id: any, react: React): Observable<any>{
     return this._http.post(`${baseUrl}/add-react/${id}`, react);
   }
+
+  getReacts(id: any): Observable<any> {
+    return this._http.get(`${baseUrl}/all-react/${id}`);
+  }
 }

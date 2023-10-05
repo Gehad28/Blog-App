@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { Post } from 'src/app/core/models/post';
 import { PostService } from 'src/app/core/services/post.service';
 import { UserService } from 'src/app/core/services/user.service';
 
@@ -16,17 +17,26 @@ export class AddPostComponent implements OnInit, OnDestroy {
   image!: string | ArrayBuffer | null;
   userId!: string;
   subs: Subscription[] = [];
+  addPhoto = 'Add Photo';
 
   constructor(private _fb: FormBuilder, 
               private dialogRef: MatDialogRef<AddPostComponent>,
+              @Inject(MAT_DIALOG_DATA) data: {post: Post, flag: boolean},
               private _postService: PostService,
               private _userService: UserService) {
     this.addPostForm = _fb.group({
       content: null
-    })
+    });
+
+    if(data){
+      this.addPostForm.patchValue({
+        content: data.post.content
+      });
+      this.addPhoto = 'Edit Photo';
+    }
   }
 
-  onChange(event: any) {
+  onUploadImage(event: any) {
     const reader = new FileReader();
 
     const file = event.target.files;
@@ -35,6 +45,7 @@ export class AddPostComponent implements OnInit, OnDestroy {
     reader.onload = (_event) => {
       this.image = reader.result;
     }
+    console.log(reader.result);
   }
 
   onCancle(){
