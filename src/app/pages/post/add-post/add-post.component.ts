@@ -28,7 +28,7 @@ export class AddPostComponent implements OnInit, OnDestroy {
       content: null
     });
 
-    if(data){
+    if(data.flag){
       this.addPostForm.patchValue({
         content: data.post.content
       });
