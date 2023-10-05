@@ -32,14 +32,14 @@ export class CommentsComponent {
 
   constructor(private _fb: FormBuilder, 
               private dialogRef: MatDialogRef<CommentsComponent>,
-              @Inject(MAT_DIALOG_DATA) data: Post,
+              @Inject(MAT_DIALOG_DATA) data: {post: Post, flag: boolean},
               private _commentService: CommentService,
               private _userService: UserService) {
     this.addCommentForm = _fb.group({
       comment: null
     });
 
-    this.post = data;
+    this.post = data.post;
   }
 
   getComments(){
@@ -52,13 +52,9 @@ export class CommentsComponent {
   }
 
   onSubmit(){
-    const comment: Comment = {
-      commentId: '',
+    const comment = {
       content: this.addCommentForm.controls['comment'].value,
-      user: this.user,
-      post: this.post,
-      userId: this.userId,
-      postId: this.post.id
+      userId: this.userId
     }
     const sub = this._commentService.addComment(this.post.id, comment).subscribe({
       next: response => this.getComments()

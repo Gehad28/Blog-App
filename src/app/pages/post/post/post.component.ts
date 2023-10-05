@@ -50,6 +50,7 @@ export class PostComponent implements OnInit, OnDestroy {
     facebookUsername: null,
     phone: null,
   };
+  thisUserId = this._userService.getUserId();
 
   constructor(
     private _userService: UserService,
@@ -71,8 +72,7 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   onReact(type: string) {
-    const thisUserId = this._userService.getUserId();
-    this._userService.getUser(thisUserId).subscribe({
+    this._userService.getUser(this.thisUserId).subscribe({
       next: (user) => {
         this.thisUser = user;
         if (user['pic'] != this.defaultImageSrc) {
@@ -84,7 +84,7 @@ export class PostComponent implements OnInit, OnDestroy {
       id: '',
       type: type,
       user: this.thisUser,
-      userId: thisUserId,
+      userId: this.thisUserId,
       post: this.post,
       postId: this.post.id,
       isReact: '1'
@@ -103,7 +103,7 @@ export class PostComponent implements OnInit, OnDestroy {
     }
     this.isReact = !this.isReact;
 
-    const sub = this._reactService.addReact(react.user.id, react).subscribe({
+    const sub = this._reactService.addReact(this.thisUserId, react).subscribe({
       next: (res) => console.log(res),
     });
     this.subs.push(sub);
@@ -148,8 +148,12 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   sharePost() {
+    const data = {
+      post_desc: this.post.content,
+      privacy: 1
+    }
     const sub = this._postService
-      .sharePost(this.post.id, this.user.id, this.post)
+      .sharePost(this.post.id, this.thisUserId, data)
       .subscribe({
         next: (response) => console.log(response),
       });
