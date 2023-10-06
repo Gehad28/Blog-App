@@ -1,4 +1,4 @@
-<mat-card class="example-card">
+<mat-card *ngIf="!post.sharedPost" class="example-card">
   <div class="d-flex justify-content-between">
     <mat-card-header>
       <img mat-card-avatar [routerLink]="['/profile', user.id]" class="example-header-image user" [src]="user.pic">
@@ -32,7 +32,7 @@
       {{post.content}}
     </p>
   </mat-card-content>
-  <img mat-card-image *ngIf="post.image" [src]="post.image" alt="Photo of a Shiba Inu">
+  <img mat-card-image *ngIf="post.image" [src]="post.image" class="m-1" alt="Photo of a Shiba Inu">
   <div class="mt-2 mx-3 d-flex num">
     <p *ngIf="post.numberOfReacts" class="reacts">{{post.numberOfReacts}} reacts .</p>
     <p *ngIf="post.numberOfComments">{{post.numberOfComments}} comments</p>
@@ -54,3 +54,115 @@
   </mat-card-actions>
 </mat-card>
   
+
+
+
+<mat-card *ngIf="post.sharedPost" class="example-card">
+  <div class="d-flex justify-content-between">
+      <mat-card-header>
+        <img mat-card-avatar [routerLink]="['/profile', user.id]" class="example-header-image user" [src]="user.pic">
+        <mat-card-title>
+          <a class="user" [routerLink]="['/profile', user.id]">{{user.name}}</a>
+        </mat-card-title>
+        <mat-card-subtitle class="d-flex align-items-center">
+          {{post.createAt}} <mat-icon class="icon mx-2">{{privacy}}</mat-icon>
+        </mat-card-subtitle>
+      </mat-card-header>
+  
+      <mat-card-actions align="end" class="card-action">
+        <button *ngIf="isCurrentUser" mat-icon-button [matMenuTriggerFor]="menuedit" aria-label="Example icon-button with a menu">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+        <mat-menu #menuedit="matMenu">
+          <!-- <button mat-menu-item (click)="openEditDialog()">
+            <mat-icon class="icon">edit</mat-icon>
+            <span>Edit post</span>
+          </button> -->
+          <button mat-menu-item (click)="deletePost()">
+            <mat-icon class="icon">delete</mat-icon>
+            <span>Delete post</span>
+          </button>
+        </mat-menu>
+      </mat-card-actions>
+  </div>
+
+  <mat-card-content class="mb-2">
+    <mat-card class="example-card-share">
+          <div class="d-flex justify-content-between">
+            <mat-card-header>
+              <img mat-card-avatar [routerLink]="['/profile', post.sharedPost.user.id]" class="example-header-image-share user" [src]="post.sharedPost.user.pic">
+              <mat-card-title>
+                <a class="user" [routerLink]="['/profile', post.sharedPost.user.id]">{{post.sharedPost.user.name}}</a>
+              </mat-card-title>
+              <mat-card-subtitle class="d-flex align-items-center">
+                {{post.sharedPost.createAt}} <mat-icon class="icon mx-2">{{sharedPrivacy}}</mat-icon>
+              </mat-card-subtitle>
+            </mat-card-header>
+        
+            <!-- <mat-card-actions align="end" class="card-action">
+              <button *ngIf="isCurrentUser" mat-icon-button [matMenuTriggerFor]="menuedit" aria-label="Example icon-button with a menu">
+                <mat-icon>more_horiz</mat-icon>
+              </button>
+              <mat-menu #menuedit="matMenu">
+                <button mat-menu-item (click)="openEditDialog()">
+                  <mat-icon class="icon">edit</mat-icon>
+                  <span>Edit post</span>
+                </button>
+                <button mat-menu-item (click)="deletePost()">
+                  <mat-icon class="icon">delete</mat-icon>
+                  <span>Delete post</span>
+                </button>
+              </mat-menu>
+            </mat-card-actions> -->
+          </div>
+        
+          <mat-card-content class="mb-2">
+            <p>
+              {{post.sharedPost.content}}
+            </p>
+          </mat-card-content>
+          <img mat-card-image *ngIf="post.sharedPost.image" [src]="post.sharedPost.image" class="m-1" alt="Photo of a Shiba Inu">
+          <!-- <div class="mt-2 mx-3 d-flex num">
+            <p *ngIf="post.numberOfReacts" class="reacts">{{post.numberOfReacts}} reacts .</p>
+            <p *ngIf="post.numberOfComments">{{post.numberOfComments}} comments</p>
+          </div> -->
+        
+          <!-- <mat-card-actions class="d-flex justify-content-around">
+            <button mat-button #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu" (click)="showMenu(menuTrigger)"
+                    [ngClass]="{'reacted-like': isReact && reactType.icon == 'thumb_up', 'reacted-love': isReact && reactType.icon == 'favorite' ,'no-react': !isReact}">
+              <mat-icon>{{reactType.icon}}</mat-icon>{{reactType.name}}
+            </button>
+            <mat-menu #menu="matMenu">
+              <div class="menu">
+                  <button mat-menu-item (click)="onReact('Like')" class="item"><mat-icon>thumb_up</mat-icon></button>
+                  <button mat-menu-item (click)="onReact('Love')" class="item"><mat-icon>favorite</mat-icon></button>
+              </div>
+            </mat-menu>
+            <button mat-button (click)="openDialog()"><mat-icon> comment</mat-icon>Comment</button>
+            <button mat-button (click)="sharePost()"><mat-icon>share</mat-icon> Share</button>
+          </mat-card-actions> -->
+    </mat-card>
+  </mat-card-content>
+
+  <div class="mt-2 mx-3 d-flex num">
+    <p *ngIf="post.numberOfReacts" class="reacts">{{post.numberOfReacts}} reacts .</p>
+    <p *ngIf="post.numberOfComments">{{post.numberOfComments}} comments</p>
+  </div>
+
+  <mat-card-actions class="d-flex justify-content-around">
+      <button mat-button #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu" (click)="showMenu(menuTrigger)"
+              [ngClass]="{'reacted-like': isReact && reactType.icon == 'thumb_up', 'reacted-love': isReact && reactType.icon == 'favorite' ,'no-react': !isReact}">
+        <mat-icon>{{reactType.icon}}</mat-icon>{{reactType.name}}
+      </button>
+      <mat-menu #menu="matMenu">
+        <div class="menu">
+            <button mat-menu-item (click)="onReact('Like')" class="item"><mat-icon>thumb_up</mat-icon></button>
+            <button mat-menu-item (click)="onReact('Love')" class="item"><mat-icon>favorite</mat-icon></button>
+        </div>
+      </mat-menu>
+      <button mat-button (click)="openDialog()"><mat-icon> comment</mat-icon>Comment</button>
+      <button mat-button (click)="sharePost()"><mat-icon>share</mat-icon> Share</button>
+    </mat-card-actions>
+</mat-card>
+  
+

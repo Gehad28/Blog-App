@@ -7,7 +7,7 @@ export interface Post{
     image: string,
     createAt: string,
     user: User,
-    sharedPost: Post | null,
+    sharedPost: Post,
     privacy: string,
     numberOfReacts: string,
     numberOfComments: string,

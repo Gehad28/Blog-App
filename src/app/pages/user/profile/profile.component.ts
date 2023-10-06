@@ -202,7 +202,10 @@ export class ProfileComponent {
     const sub = this.postService
       .getProfilePosts(this.currentUserId, this.id)
       .subscribe({
-        next: (response) => (this.posts = response['data'].reverse()),
+        next: (response) => {
+          (this.posts = response['data'].reverse());
+          console.log(this.posts)
+        }
       });
     this.subs.push(sub);
   }

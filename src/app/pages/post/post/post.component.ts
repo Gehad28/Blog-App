@@ -42,6 +42,16 @@ export class PostComponent implements OnInit, OnDestroy {
     facebookUsername: null,
     phone: null,
   };
+  sharedPostUser: User = {
+    id: null,
+    name: null,
+    email: null,
+    password: null,
+    pic: null,
+    bio: null,
+    facebookUsername: null,
+    phone: null,
+  };
   thisUserId = '';
   defaultImageSrc = '../../../../assets/images/defaultProfile.jpg';
   isReact!: boolean;
@@ -52,6 +62,7 @@ export class PostComponent implements OnInit, OnDestroy {
   subs: Subscription[] = [];
   isCurrentUser = false;
   privacy = '';
+  sharedPrivacy = '';
   reactions: React[] = [];
 
   constructor(
@@ -70,6 +81,16 @@ export class PostComponent implements OnInit, OnDestroy {
       this.privacy = 'people';
     } else {
       this.privacy = 'lock';
+    }
+
+    if(this.post.sharedPost){
+      if (this.post.sharedPost.privacy == 'PUBLIC') {
+        this.sharedPrivacy = 'public';
+      } else if (this.post.sharedPost.privacy == 'FRIENDS') {
+        this.sharedPrivacy = 'people';
+      } else {
+        this.sharedPrivacy = 'lock';
+      }
     }
   }
 
@@ -107,9 +128,9 @@ export class PostComponent implements OnInit, OnDestroy {
       user: this.thisUser,
       userId: this.thisUserId,
       post: this.post,
-      postId: this.post.id,
-      isReact: '1'
+      postId: this.post.id
     };
+    
 
     const sub = this._reactService.addReact(this.thisUserId, react).subscribe({
       next: (res) => console.log(res),
@@ -129,7 +150,7 @@ export class PostComponent implements OnInit, OnDestroy {
     this.reactIcon(type);
     this.isReact = !this.isReact;
 
-    if(!this.isReact){
+    if(this.isReact){
       this.addReact(type);
     }
     else{
@@ -164,7 +185,7 @@ export class PostComponent implements OnInit, OnDestroy {
     const sub = this._postService
       .sharePost(this.post.id, this.thisUserId, data)
       .subscribe({
-        next: (response) => console.log(response),
+        next: (response) => this._postService.postSubject.next(true)
       });
     this.subs.push(sub);
   }
@@ -197,13 +218,6 @@ export class PostComponent implements OnInit, OnDestroy {
         if (user['pic'] != this.defaultImageSrc) {
           u.pic = this._util.ConvertImage(user['pic']);
         }
-
-        if(id == this._userService.getUserId()){
-          this.isCurrentUser = true;
-        }
-        else{
-          this.isCurrentUser = false;
-        }
       },
     });
     this.subs.push(sub);
@@ -211,10 +225,17 @@ export class PostComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.user = this.post.user;
-    // console.log(this.post.user);
+    console.log(this.isCurrentUser)
 
     this.thisUserId = this._userService.getUserId();
     this.getUser(this.thisUserId, this.thisUser);
+
+    if(this.post.user.id == this._userService.getUserId()){
+      this.isCurrentUser = true;
+    }
+    else{
+      this.isCurrentUser = false;
+    }
 
     this.isReact = this.post.isReact;
     this.getReacts();
@@ -223,10 +244,8 @@ export class PostComponent implements OnInit, OnDestroy {
         if(react.userId == this.thisUserId){
           this.reactIcon(react.type);
         }
-      })
+      });
     }
-
-
     this.privacyIcon();
   }
 

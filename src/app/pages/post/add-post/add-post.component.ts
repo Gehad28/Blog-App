@@ -28,12 +28,14 @@ export class AddPostComponent implements OnInit, OnDestroy {
               private _postService: PostService,
               private _userService: UserService) {
     this.addPostForm = _fb.group({
-      content: null
+      content: null,
+      privacy: null
     });
 
     if(data && data.flag){
       this.addPostForm.patchValue({
-        content: data.post.content
+        content: data.post.content,
+        privacy: data.post.privacy
       });
       this.addPhoto = 'Edit Photo';
       this.flag = data.flag;
@@ -52,6 +54,10 @@ export class AddPostComponent implements OnInit, OnDestroy {
       this.image = reader.result;
     }
     console.log(reader.result);
+  }
+
+  changePrivacy(e: any){
+    this.addPostForm.controls['privacy'].setValue(e.target.value, {onlySelf: true});
   }
 
   onCancle(){

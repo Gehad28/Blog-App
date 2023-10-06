@@ -1,11 +1,11 @@
 <div class="container">
     <form [formGroup]="addPostForm" class="container mt-5" (ngSubmit)="onSubmit()">
         <div class="d-flex align-items-center justify-content-between">
-            <select class="form-select w-50" aria-label="Default select example">
+            <select formControlName="privacy" (change)="changePrivacy($event)" class="form-select w-50" aria-label="Default select example">
                 <option selected>Privacy</option>
-                <option value="1">Public</option>
-                <option value="2">Friends</option>
-                <option value="3">Only Me</option>
+                <option value="0">Public</option>
+                <option value="1">Friends</option>
+                <option value="2">Only Me</option>
             </select>
             <div class="mx-5">
                 <label for="formFile1" class="d-flex align-items-center input">
@@ -23,7 +23,6 @@
             <button mat-raised-button color="primary" type="submit" class="button left">{{submit}}</button>
             <button mat-raised-button (click)="onCancle()" type="button" class="button">Cancle</button>
         </div>
-
     </form>
 </div>
 

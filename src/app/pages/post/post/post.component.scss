@@ -4,11 +4,28 @@
     max-width: 600px;
     margin: auto;
     margin-top: 20px;
+    box-shadow: none;
+    border: solid 0.5px rgb(205, 205, 205);
+}
+
+.example-card-share {
+    max-width: 600px;
+    margin: auto;
+    margin-top: 20px;
+    box-shadow: none;
+    border: solid 0.5px rgb(219, 219, 219);
 }
   
 .example-header-image {
     background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
     background-size: cover;
+}
+
+.example-header-image-share {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+    width: 35px;
+    height: 35px;
 }
 
 .menu {
