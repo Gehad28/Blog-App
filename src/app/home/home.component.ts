@@ -26,6 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const sub = this._postService.getAllPosts(this.id).subscribe({
       next: (respons) => {
         this.posts = respons['data'].reverse();
+        console.log(this.posts)
       },
     });
     this.subs.push(sub);
@@ -46,6 +47,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.id = this._userService.getUserId();
     this.getPosts();
+
+    const sub = this._postService.postSubject.subscribe({
+      next: v => {
+        if(v){
+          this.getPosts();
+        }
+      }
+    });
+    this.subs.push(sub);
   }
 
   ngOnDestroy(): void {

@@ -32,14 +32,6 @@ export class PostComponent implements OnInit, OnDestroy {
     facebookUsername: null,
     phone: null,
   };
-  defaultImageSrc = '../../../../assets/images/defaultProfile.jpg';
-  isReact!: boolean;
-  reactType = {
-    name: 'Like',
-    icon: 'thumb_up',
-  };
-  subs: Subscription[] = [];
-  isCurrentUser = false;
   thisUser: User = {
     id: null,
     name: null,
@@ -50,7 +42,17 @@ export class PostComponent implements OnInit, OnDestroy {
     facebookUsername: null,
     phone: null,
   };
-  thisUserId = this._userService.getUserId();
+  thisUserId = '';
+  defaultImageSrc = '../../../../assets/images/defaultProfile.jpg';
+  isReact!: boolean;
+  reactType = {
+    name: 'Like',
+    icon: 'thumb_up',
+  };
+  subs: Subscription[] = [];
+  isCurrentUser = false;
+  privacy = '';
+  reactions: React[] = [];
 
   constructor(
     private _userService: UserService,
@@ -63,33 +65,15 @@ export class PostComponent implements OnInit, OnDestroy {
 
   privacyIcon() {
     if (this.post.privacy == 'PUBLIC') {
-      this.post.privacy = 'public';
+      this.privacy = 'public';
     } else if (this.post.privacy == 'FRIENDS') {
-      this.post.privacy = 'people';
+      this.privacy = 'people';
     } else {
-      this.post.privacy = 'lock';
+      this.privacy = 'lock';
     }
   }
 
-  onReact(type: string) {
-    this._userService.getUser(this.thisUserId).subscribe({
-      next: (user) => {
-        this.thisUser = user;
-        if (user['pic'] != this.defaultImageSrc) {
-          this.thisUser.pic = this._util.ConvertImage(user['pic']);
-        }
-      },
-    });
-    const react: React = {
-      id: '',
-      type: type,
-      user: this.thisUser,
-      userId: this.thisUserId,
-      post: this.post,
-      postId: this.post.id,
-      isReact: '1'
-    };
-
+  reactIcon(type: any){
     if (type == 'Like') {
       this.reactType = {
         name: 'Like',
@@ -101,12 +85,6 @@ export class PostComponent implements OnInit, OnDestroy {
         icon: 'favorite',
       };
     }
-    this.isReact = !this.isReact;
-
-    const sub = this._reactService.addReact(this.thisUserId, react).subscribe({
-      next: (res) => console.log(res),
-    });
-    this.subs.push(sub);
   }
 
   showMenu(trigger: MatMenuTrigger) {
@@ -122,17 +100,48 @@ export class PostComponent implements OnInit, OnDestroy {
     }
   }
 
-  removeReact() {
-    this.isReact = false;
+  addReact(type: string){
+    const react: React = {
+      id: '',
+      type: type,
+      user: this.thisUser,
+      userId: this.thisUserId,
+      post: this.post,
+      postId: this.post.id,
+      isReact: '1'
+    };
+
+    const sub = this._reactService.addReact(this.thisUserId, react).subscribe({
+      next: (res) => console.log(res),
+    });
+    this.subs.push(sub);
   }
 
-  // getReacts(){
-  //   const sub = this._reactService.getReacts(this.post.id).subscribe({
-  //     next: res => {
+  removeReact() {
+    this.isReact = false;
+    const sub = this._reactService.deleteReact(this.post.id, this.thisUserId).subscribe({
+      next: res => console.log(res)
+    });
+    this.subs.push(sub);
+  }
 
-  //     }
-  //   })
-  // }
+  onReact(type: string) {
+    this.reactIcon(type);
+    this.isReact = !this.isReact;
+
+    if(!this.isReact){
+      this.addReact(type);
+    }
+    else{
+      this.removeReact();
+    }
+  }
+
+  getReacts(){
+    const sub = this._reactService.getReacts(this.post.id).subscribe({
+      next: res => this.reactions = res.data
+    });
+  }
 
   openDialog() {
     const dialogConfig = new MatDialogConfig();
@@ -171,35 +180,25 @@ export class PostComponent implements OnInit, OnDestroy {
       flag: true
     };
     this.matDialog.open(AddPostComponent, dialogConfig);
-    // this.matDialog.afterAllClosed.subscribe({
-    //   next: () => {
-    //     const sub = this._postService.getAllPosts(this.id).subscribe({
-    //       next: respons => {
-    //         this.posts = respons['data'].reverse();
-    //       }
-    //     });
-    //     this.subs.push(sub);
-    //   }
-    // })
   }
 
   deletePost() {
     const sub = this._postService.deletePost(this.post.id).subscribe({
-      next: response => console.log(response)
+      next: response => this._postService.postSubject.next(true)
     });
     this.subs.push(sub);
   }
 
-  ngOnInit(): void {
-    this.isReact = this.post.isReact;
-    this._userService.getUser(this.post.user.id).subscribe({
+
+  getUser(id: string | null, u: User){
+    const sub = this._userService.getUser(id).subscribe({
       next: (user) => {
-        this.user = user;
+        u = user;
         if (user['pic'] != this.defaultImageSrc) {
-          this.user.pic = this._util.ConvertImage(user['pic']);
+          u.pic = this._util.ConvertImage(user['pic']);
         }
 
-        if(this.post.user.id == this._userService.getUserId()){
+        if(id == this._userService.getUserId()){
           this.isCurrentUser = true;
         }
         else{
@@ -207,6 +206,26 @@ export class PostComponent implements OnInit, OnDestroy {
         }
       },
     });
+    this.subs.push(sub);
+  }
+
+  ngOnInit(): void {
+    this.user = this.post.user;
+    // console.log(this.post.user);
+
+    this.thisUserId = this._userService.getUserId();
+    this.getUser(this.thisUserId, this.thisUser);
+
+    this.isReact = this.post.isReact;
+    this.getReacts();
+    if(this.isReact){
+      this.reactions.forEach(react => {
+        if(react.userId == this.thisUserId){
+          this.reactIcon(react.type);
+        }
+      })
+    }
+
 
     this.privacyIcon();
   }

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { Post } from 'src/app/core/models/post';
 import { PostService } from 'src/app/core/services/post.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -18,6 +18,9 @@ export class AddPostComponent implements OnInit, OnDestroy {
   userId!: string;
   subs: Subscription[] = [];
   addPhoto = 'Add Photo';
+  post!: Post;
+  flag = false;
+  submit = 'Create';
 
   constructor(private _fb: FormBuilder, 
               private dialogRef: MatDialogRef<AddPostComponent>,
@@ -28,12 +31,15 @@ export class AddPostComponent implements OnInit, OnDestroy {
       content: null
     });
 
-    // if(data.flag){
-    //   this.addPostForm.patchValue({
-    //     content: data.post.content
-    //   });
-    //   this.addPhoto = 'Edit Photo';
-    // }
+    if(data && data.flag){
+      this.addPostForm.patchValue({
+        content: data.post.content
+      });
+      this.addPhoto = 'Edit Photo';
+      this.flag = data.flag;
+      this.post = data.post;
+      this.submit = 'Save';
+    }
   }
 
   onUploadImage(event: any) {
@@ -59,10 +65,23 @@ export class AddPostComponent implements OnInit, OnDestroy {
     }
     const data = {...this.addPostForm.value, image: this.image};
 
-    const sub = this._postService.addPost(this.userId, data).subscribe({
-      next: (response) => console.log(response)
-    });
-    this.subs.push(sub);
+    if(!this.flag){
+      const sub = this._postService.addPost(this.userId, data).subscribe({
+        next: (response) => console.log(response)
+      });
+      this.subs.push(sub);
+    }
+    else{
+      data.user = this.post.user;
+      data.createAt = this.post.createAt;
+      const sub = this._postService.editPost(this.post.id, this.userId, data).subscribe({
+        next: res => {
+          console.log(res);
+          this._postService.postSubject.next(true);
+        }
+      });
+      this.subs.push(sub);
+    }
     this.dialogRef.close();
   }
 

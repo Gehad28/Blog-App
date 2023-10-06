@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { React } from '../models/react';
 
-const baseUrl = 'api/';
+const baseUrl = 'api';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +18,9 @@ export class ReactService {
 
   getReacts(id: any): Observable<any> {
     return this._http.get(`${baseUrl}/all-react/${id}`);
+  }
+
+  deleteReact(postId: any, userId: any): Observable<any> {
+    return this._http.delete(`${baseUrl}/delete-react/${postId}/${userId}`);
   }
 }

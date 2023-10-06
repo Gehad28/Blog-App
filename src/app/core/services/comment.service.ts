@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Comment } from '../models/comment';
 
-const baseUrl = 'api/';
+const baseUrl = 'api';
 
 @Injectable({
   providedIn: 'root'

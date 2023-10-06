@@ -1,22 +1,25 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-const baseUrl = 'api/';
+const baseUrl = 'api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
 
+  postSubject = new BehaviorSubject(false);
+
+
   constructor(private _http: HttpClient) { }
 
   addPost(id: string, post: any): Observable<any> {
-    return this._http.post(`${baseUrl}add-post/${id}`, post);
+    return this._http.post(`${baseUrl}/add-post/${id}`, post);
   }
 
   getAllPosts(id: string): Observable<any> {
-    return this._http.get(`${baseUrl}all-posts/${id}`);
+    return this._http.get(`${baseUrl}/all-posts/${id}`);
   }
 
   getProfilePosts(userId: string, id: string): Observable<any>{
