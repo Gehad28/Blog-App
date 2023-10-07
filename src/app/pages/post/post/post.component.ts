@@ -11,7 +11,6 @@ import { ReactService } from 'src/app/core/services/react.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { CommentsComponent } from '../comments/comments.component';
 import { PostService } from 'src/app/core/services/post.service';
-// import { AddPostComponent } from '../add-post/add-post.component';
 import { AddPostComponent } from '../add-post/add-post.component';
 import { Utils } from 'src/app/core/utils';
 
@@ -64,10 +63,10 @@ export class PostComponent implements OnInit, OnDestroy {
   privacy = '';
   sharedPrivacy = '';
   reactions: React[] = [];
+  // type!: number;
 
   constructor(
     private _userService: UserService,
-    private _sanitizer: DomSanitizer,
     private _reactService: ReactService,
     private matDialog: MatDialog,
     private _postService: PostService,
@@ -109,7 +108,7 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   showMenu(trigger: MatMenuTrigger) {
-    if (!this.isReact) {
+    if (this.isReact == false) {
       trigger.openMenu();
     } else {
       trigger.closeMenu();
@@ -118,6 +117,7 @@ export class PostComponent implements OnInit, OnDestroy {
         name: 'Like',
         icon: 'thumb_up',
       };
+      this.removeReact();
     }
   }
 
@@ -133,7 +133,7 @@ export class PostComponent implements OnInit, OnDestroy {
     
 
     const sub = this._reactService.addReact(this.thisUserId, react).subscribe({
-      next: (res) => console.log(res),
+      next: (res) => this._postService.postSubject.next(true)
     });
     this.subs.push(sub);
   }
@@ -141,33 +141,39 @@ export class PostComponent implements OnInit, OnDestroy {
   removeReact() {
     this.isReact = false;
     const sub = this._reactService.deleteReact(this.post.id, this.thisUserId).subscribe({
-      next: res => console.log(res)
+      next: res => this._postService.postSubject.next(true)
     });
     this.subs.push(sub);
   }
 
   onReact(type: string) {
     this.reactIcon(type);
-    this.isReact = !this.isReact;
 
-    if(this.isReact){
+    if(this.post.isReact == null){
       this.addReact(type);
     }
-    else{
-      this.removeReact();
-    }
+    this.isReact = !this.isReact;
   }
 
-  getReacts(){
-    const sub = this._reactService.getReacts(this.post.id).subscribe({
-      next: res => this.reactions = res.data
-    });
-  }
+  // getReacts(){
+  //   const sub = this._reactService.getReacts(this.post.id).subscribe({
+  //     next: res => {
+  //       this.reactions = res.data;
+  //       if(this.isReact != null){
+  //         this.reactions.forEach(react => {
+  //           if(this.thisUserId == react.userId){        
+  //             this.reactIcon(react.type);
+  //           }
+  //         });
+  //       }
+  //     }
+  //   });
+  // }
+
 
   openDialog() {
     const dialogConfig = new MatDialogConfig();
 
-    // dialogConfig.autoFocus = true;
     dialogConfig.width = '50%';
     dialogConfig.height = '90%';
     dialogConfig.data = {
@@ -225,7 +231,6 @@ export class PostComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.user = this.post.user;
-    console.log(this.isCurrentUser)
 
     this.thisUserId = this._userService.getUserId();
     this.getUser(this.thisUserId, this.thisUser);
@@ -237,15 +242,19 @@ export class PostComponent implements OnInit, OnDestroy {
       this.isCurrentUser = false;
     }
 
-    this.isReact = this.post.isReact;
-    this.getReacts();
-    if(this.isReact){
-      this.reactions.forEach(react => {
-        if(react.userId == this.thisUserId){
-          this.reactIcon(react.type);
-        }
-      });
+    // this.type = this.post.isReact;
+    if(this.post.isReact == 1){
+      this.reactIcon('Like');
+      this.isReact = true;
     }
+    else if (this.post.isReact == 2){
+      this.reactIcon('Love');
+      this.isReact = true;
+    }
+    else{
+      this.isReact = false;
+    }
+    
     this.privacyIcon();
   }
 

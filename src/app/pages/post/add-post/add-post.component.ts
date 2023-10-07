@@ -29,7 +29,7 @@ export class AddPostComponent implements OnInit, OnDestroy {
               private _userService: UserService) {
     this.addPostForm = _fb.group({
       content: null,
-      privacy: null
+      privacy: 0
     });
 
     if(data && data.flag){

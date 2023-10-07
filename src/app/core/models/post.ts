@@ -11,5 +11,5 @@ export interface Post{
     privacy: string,
     numberOfReacts: string,
     numberOfComments: string,
-    isReact: boolean
+    isReact: number
 }
