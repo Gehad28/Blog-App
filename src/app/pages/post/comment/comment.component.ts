@@ -29,12 +29,18 @@ export class CommentComponent implements OnInit, OnDestroy {
   editComment(){
     this.editFlag = true;
     this.editForm = this._fb.group({
-      comment: this.comment.content
+      content: this.comment.content
     });
   }
 
   onSubmit(){
-    const data = this.editForm.value;
+    const data = {
+      ...this.editForm.value, 
+      post: this.comment.post, 
+      user: this.comment.user, 
+      postId: this.comment.post.id, 
+      userId: this.comment.user.id
+    };
     const sub = this._commentService.editComment(this.comment.commentId, data).subscribe({
       next: res => {
         this.editFlag = false;

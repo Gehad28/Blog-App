@@ -1,9 +1,18 @@
-
+.parent{
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
 
 .container{
     margin: auto;
+    margin-left: 20px;
     width: 100%;
     height: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .form{
@@ -14,25 +23,33 @@
 .comments{
     width: 90%;
     margin: auto;
+    height: 85%;
+    position: relative;
+    overflow: auto;
+}
+
+.comment{
+    width: 90%;
+    margin: auto;
 }
 
 
-.friend-img{
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    cursor: pointer;
-}
+// .friend-img{
+//     width: 50px;
+//     height: 50px;
+//     border-radius: 50%;
+//     cursor: pointer;
+// }
 
-.friend-card h6{
-    cursor: pointer;
-}
+// .friend-card h6{
+//     cursor: pointer;
+// }
 
-.friend-card{
-    text-decoration: none;
-}
+// .friend-card{
+//     text-decoration: none;
+// }
 
 
-.friend-card h6:hover, img:hover{
-    opacity: 0.8;
-}
+// .friend-card h6:hover, img:hover{
+//     opacity: 0.8;
+// }

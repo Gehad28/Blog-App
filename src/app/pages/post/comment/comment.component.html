@@ -9,7 +9,7 @@
                     <div *ngIf="editFlag" class="container">
                         <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="form mt-3">
                             <div class="input-group mb-3">
-                                <input formControlName="comment" type="text" class="form-control" id="floatingInput" placeholder="Add comment..">
+                                <input formControlName="content" type="text" class="form-control" id="floatingInput" placeholder="Add comment..">
                                 <button mat-button type="submit"><mat-icon>send</mat-icon></button>
                             </div>
                         </form>

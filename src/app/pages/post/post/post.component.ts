@@ -65,6 +65,7 @@ export class PostComponent implements OnInit, OnDestroy {
   reactions: React[] = [];
   // type!: number;
 
+
   constructor(
     private _userService: UserService,
     private _reactService: ReactService,

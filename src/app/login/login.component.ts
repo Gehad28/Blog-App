@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../core/services/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy {
   loginform!: FormGroup;
   message!: string;
+  subs: Subscription[] = [];
 
   constructor(
     private _login: FormBuilder,
@@ -33,9 +35,7 @@ export class LoginComponent {
       return;
     }
     const data = this.loginform.value;
-    console.log(data);
-    // this._userService.saveUserId('1');  //////////////////////
-    const sub = this._userService.login(this.loginform.value).subscribe({
+    const sub = this._userService.login(data).subscribe({
       next: (response: any) => {
         if (response['id'] || response['id'] != undefined) {
           this._userService.saveUserId(response['id']);
@@ -46,8 +46,18 @@ export class LoginComponent {
         else if(response['msg']){
           this.message = response['msg'];
         }
-
       }
     });
+    this.subs.push(sub);
+  }
+
+  ngOnInit(): void {
+    if(this._userService.getUserId()){
+      this._router.navigate(['home']);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 }

@@ -10,3 +10,11 @@
     position: static;
     top: -60px;
 }
+
+header{
+    position: fixed;
+    z-index: 2;
+    width: 100%;
+    top: -100px;
+    padding-top: 100px;
+}
